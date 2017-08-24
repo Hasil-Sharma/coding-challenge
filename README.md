@@ -10,5 +10,5 @@ Create an interactive game of Tic-Tac-Toe _(player vs AI)_ that runs as a standa
 * Document your work
 
 ## Submissions
-* Fork this repo and use it to version your implementation.
+* Clone this repo and use it to version your implementation.
 * Send a tarball of your fork to sampedro@colorado.edu once you have completed the challenge.
