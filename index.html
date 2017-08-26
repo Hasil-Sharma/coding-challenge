@@ -23,16 +23,18 @@
   </br>
     <div id= "status-container">
       <div id = "init">
-      <p>Who Plays First?</p>
-      <form id = "radio-form">
-        <input type="radio" name="FirstPlayer" value="AI" /> AI
-        <input type="radio" name="FirstPlayer" value="You" /> You
-      </form>
-    </br>
-      <button type="button" id = "start-button"> Start Game !</button>
+        <p>Who Plays First?</p>
+        <form id = "radio-form">
+          <input type="radio" name="FirstPlayer" value="AI" checked = "checked"/> AI
+          <input type="radio" name="FirstPlayer" value="You" /> You
+        </br>
+          <button type="button" id = "start-button"> Start Game !</button>
+        </form>
       </div>
+      <button type="button" id = "restart-button" > Restart Game !</button>
+      </br>
       <p id = "status-message">
-        Please choose who plays first and click "Start Game!"
+        Please choose who plays first (Default is AI) and click "Start Game!"
       </p>
     </div>
   </body>
