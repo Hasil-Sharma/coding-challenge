@@ -3,21 +3,29 @@ var statusMessage;
 var restartButton;
 var startButton;
 var initSection;
-var currentPlayer;
-var cellIndex;
 var board;
+
 var playerMarkMapping = {
   AI : 'X',
   You : 'O'
 }
+var aiMark = playerMarkMapping['AI'];
+var youMark = playerMarkMapping['You']
+var aiScore = 10;
 
 // Removes the state information stored in js and resets the moves previously made
 function refreshHtmlJs(){
   $(".tile").text("");
 }
 
-function switchPlayer(){
-  currentPlayer = currentPlayer.localeCompare('AI') ? 'AI' : 'You';
+// Method to switch the players
+function switchPlayerMark(playerMark){
+  return (!playerMark.localeCompare(aiMark)) ? youMark : aiMark;
+}
+
+// Method to score the winning board
+function scoringMethod(playerMark) {
+  return (!playerMark.localeCompare(aiMark)) ? aiScore : -aiScore;
 }
 
 /* Inplements restart button behavious : Hides the restart button, shows the start
@@ -40,19 +48,17 @@ function identifyWhichPlayerFirst(){
   startButton.click(function(){
     firstPlayerValue = $("input[name=FirstPlayer]").filter(':checked').val();
 
-    currentPlayer = firstPlayerValue;
-    restartButton.show();
     initSection.hide();
+    restartButton.show();
 
     if (!firstPlayerValue.localeCompare("AI")){
-      // alert(playerMarkMapping[currentPlayer]);
-      // Strategy when AI has to run first
-      // $(".tile:nth-child(5)").text(playerMarkMapping[currentPlayer]);
+      // Instantiate the object with starting player as AI
+      board = new BoardState(playerMarkMapping["AI"], switchPlayerMark, scoringMethod)
       runAI()
       statusMessage.text("AI played, your turn now !");
     } else {
-      // alert(playerMarkMapping[currentPlayer]);
-      // Stragey when player has to run first
+      // Instantiate the obejct with starting player as You
+      board = new BoardState(playerMarkMapping["You"], switchPlayerMark, scoringMethod)
       statusMessage.text("Waiting for you to start the move!");
     }
   });
@@ -61,24 +67,31 @@ function identifyWhichPlayerFirst(){
 function runAI() {
   var possibleStates = board.getPossibleMoves();
 
-  // for the case when player makes the last move
-  if (possibleStates.length == 0) {
-    statusMessage.text("Nobody won its a tie !");
-  } else {
-    var stateChange = possibleStates[Math.floor(Math.random() * possibleStates.length)]
-    board.setCell(stateChange, playerMarkMapping["AI"]);
-    $("#" + stateChange).text(playerMarkMapping["AI"]);
-    if(board.getPossibleMoves().length == 0){
-      // for the case when AI makes the last move
-      statusMessage.text("Nobody won its a tie !");
-    } else if (board.checkwin()){
-      statusMessage.text("AI Won !")
-    } else {
-      switchPlayer();
-      statusMessage.text("AI played, your turn now !");
-    }
-  }
+  // Always a state to change else method wouldn't have been called
+  var stateChange = possibleStates[Math.floor(Math.random() * possibleStates.length)]
+  // var stateChange = findBestMove(board);
 
+  // Set the cells in board object
+  var flags = board.setCell(stateChange, playerMarkMapping["AI"]);
+
+
+  // update the UI
+  $("#" + stateChange).text(playerMarkMapping["AI"]);
+
+  // Implicit that tile will be set.
+
+
+  // Check if update caused a tie
+  if(board.isTie()){
+    // for the case when AI makes the last move
+    statusMessage.text("Nobody won its a tie !");
+  } else if (flags.gameWon){
+    // Check if update is a winning move
+    statusMessage.text("AI Won !")
+  } else {
+    // wait for the other player
+    statusMessage.text("AI played, your turn now !");
+  }
 }
 
 
@@ -96,17 +109,21 @@ function identifyWhichCellClicked(){
       var tileId = $(this).attr("id");
 
       //try setting the tile which was clicked
-      var tileSet = board.setCell(tileId, playerMarkMapping["You"])
+      var flags = board.setCell(tileId, playerMarkMapping["You"])
 
-      // if tile can be set
-      if(tileSet){
-        // set the UI to show the change
+      // if tile is set
+      if(flags.tileSet){
+
+        // set the HTML to show the change
         $(this).text(playerMarkMapping["You"]);
-        if (board.checkwin()) {
+
+        // Check if current update wons the game
+        if (flags.gameWon) {
           statusMessage.text("You won !");
+        } else if (board.isTie()){ // Check if current update ties the game
+          statusMessage.text("Nobody won its a tie !");
         } else {
-          switchPlayer();
-          runAI();
+          runAI(); // Run the AI
         }
       }
     }
@@ -120,7 +137,7 @@ $(document).ready(function(){
   restartButton = $("#restart-button");
   startButton = $("#start-button");
   initSection = $("#init");
-  board = new BoardState();
+
   restartButton.hide();
 
   identifyWhichPlayerFirst();
