@@ -34,7 +34,7 @@ BoardState.prototype.compareString = function(string){
 }
 
 BoardState.prototype.setCell = function(index, playerMark) {
-  if (this.cells[index] == false){
+  if (this.cells[index] == false && this.boardDone == false){
     this.cells[index] = playerMark;
     this.currentPlayerMark = playerMark;
     this.indexChanged = index;
@@ -52,7 +52,7 @@ BoardState.prototype.checkwin = function(){
   if (this.boardDone)
     return true;
 
-  var horizontal = '', vertical = '', diagonal = '', vertical1 = '', vertical2 = '';
+  var horizontal = '', vertical = '', diagonal1 = '', diagonal2 = '';
   var index = this.indexChanged;
 
   if (index % 3 == 0){
@@ -70,14 +70,14 @@ BoardState.prototype.checkwin = function(){
   }
 
   if (index == 0 || index == 4 || index == 8){
-    vertical1 = this.concatElements([0, 4, 8]);
+    diagonal1 = this.concatElements([0, 4, 8]);
   }
 
   if (index == 2 || index == 4 || index == 6){
-    vertical2 = this.concatElements([2, 4, 6]);
+    diagonal2 = this.concatElements([2, 4, 6]);
   }
 
-  if (this.compareString(vertical1) || this.compareString(vertical2) || this.compareString(horizontal) || this.compareString(vertical)){
+  if (this.compareString(diagonal1) || this.compareString(diagonal2) || this.compareString(horizontal) || this.compareString(vertical)){
     this.boardDone = true;
     return true;
   }
