@@ -3,13 +3,22 @@ var statusMessage;
 var restartButton;
 var startButton;
 var initSection;
+var currentPlayer;
+var cellIndex;
 
+var playerMarkMapping = {
+  AI : 'X',
+  You : 'O'
+}
 
 // Removes the state information stored in js and resets the moves previously made
 function refreshHtmlJs(){
-// To Do
+  $(".tile").text("");
 }
 
+function switchPlayer(){
+  currentPlayer = currentPlayer.localeCompare('AI') ? 'AI' : 'You';
+}
 
 /* Inplements restart button behavious : Hides the restart button, shows the start
 button and redio buttons to chose the players, removes the state information, resets
@@ -19,7 +28,7 @@ function restartButtonFunctionality(){
     restartButton.hide();
     initSection.show();
     refreshHtmlJs();
-    statusMessage.text('Please choose who plays first (Default is AI) and click "Start Game!"');
+    statusMessage.text('Please choose who plays first and click "Start Game!"');
   });
 }
 
@@ -30,15 +39,18 @@ function identifyWhichPlayerFirst(){
   startButton.click(function(){
     firstPlayerValue = $("input[name=FirstPlayer]").filter(':checked').val();
 
+    currentPlayer = firstPlayerValue;
     restartButton.show();
     initSection.hide();
 
     if (!firstPlayerValue.localeCompare("AI")){
-      alert("AI");
+      alert(playerMarkMapping[currentPlayer]);
       // Strategy when AI has to run first
+      $(".tile:nth-child(5)").text(playerMarkMapping[currentPlayer]);
+      switchPlayer();
       statusMessage.text("AI played, your turn now !");
     } else {
-      alert("You")
+      alert(playerMarkMapping[currentPlayer]);
       // Stragey when player has to run first
       statusMessage.text("Waiting for you to start the move!");
     }
@@ -54,7 +66,8 @@ function identifyWhichCellClicked(){
       // case when start button isn't pressed and tiles are clicked
       statusMessage.css("font-weight","Bold");
     } else {
-      alert(this.id);
+      $(this).text(playerMarkMapping[currentPlayer]);
+      switchPlayer();
     }
   });
 }
