@@ -54,7 +54,13 @@ function identifyWhichPlayerFirst(){
     if (!firstPlayerValue.localeCompare("AI")){
       // Instantiate the object with starting player as AI
       board = new BoardState(playerMarkMapping["AI"], switchPlayerMark, scoringMethod)
-      runAI()
+
+      // Initialize first step to reduce the recursion stack
+      var possibleStates = [0, 2, 4, 6, 8]; // corner and center
+      var stateChange = possibleStates[Math.floor(Math.random() * possibleStates.length)];
+
+      board.setCell(stateChange, playerMarkMapping["AI"]);
+      $("#" + stateChange).text(playerMarkMapping["AI"]);
       statusMessage.text("AI played, your turn now !");
     } else {
       // Instantiate the obejct with starting player as You
