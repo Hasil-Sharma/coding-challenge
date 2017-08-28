@@ -27,17 +27,17 @@ function BoardState (startPlayerMark, switchPlayerMarkMethod, scoringGameMethod)
   var scoringMethod = scoringGameMethod;
 
 // For Debugging
-//   this.getAttributes = function() {
-//     return {
-//       cells: cells.slice(),
-//       startPlayerMark: currentPlayerMark,
-//       prevMark: prevMark,
-//       indexChanged: indexChanged,
-//       gameWon: gameWon,
-//       switchPlayerMarkMethod: switchPlayerMark,
-//       scoringGameMethod: scoringMethod
-//   };
-// }
+  this.getAttributes = function() {
+    return {
+      cells: cells.slice(),
+      startPlayerMark: currentPlayerMark,
+      prevMark: prevMark,
+      indexChanged: indexChanged,
+      gameWon: gameWon,
+      switchPlayerMarkMethod: switchPlayerMark,
+      scoringGameMethod: scoringMethod
+  };
+}
 
 
   // Setter methods used while cloning the board
@@ -170,9 +170,9 @@ function BoardState (startPlayerMark, switchPlayerMarkMethod, scoringGameMethod)
     }
   }
 
-  // this.getPlayerWhoseTurn = function() {
-  //   return currentPlayerMark;
-  // }
+  this.getPlayerWhoseTurn = function() {
+    return currentPlayerMark;
+  }
 
   // Method to deep clone the object
   this.cloneBoardObject = function() {

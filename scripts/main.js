@@ -68,8 +68,8 @@ function runAI() {
   var possibleStates = board.getPossibleMoves();
 
   // Always a state to change else method wouldn't have been called
-  var stateChange = possibleStates[Math.floor(Math.random() * possibleStates.length)]
-  // var stateChange = findBestMove(board);
+  // var stateChange = possibleStates[Math.floor(Math.random() * possibleStates.length)]
+  var stateChange = findBestMoveDriver(board, 0);
 
   // Set the cells in board object
   var flags = board.setCell(stateChange, playerMarkMapping["AI"]);
