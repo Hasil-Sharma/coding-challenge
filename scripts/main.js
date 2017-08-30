@@ -70,6 +70,16 @@ function identifyWhichPlayerFirst(){
   });
 }
 
+// Method to check if doing the last move is redundant and game is going to tie anyways
+// Shouldn't call after manual setting as it is possible AI wins by making the last update
+function checkIfLastMove(playerKey){
+  if (board.getPossibleMoves().length == 1) {
+    statusMessage.text("Nobody won its a tie !");
+    var stateChange = board.getPossibleMoves()[0];
+    board.setCell(stateChange, playerMarkMapping[playerKey]);
+  }
+}
+
 function runAI() {
   var possibleStates = board.getPossibleMoves();
 
@@ -97,9 +107,10 @@ function runAI() {
   } else {
     // wait for the other player
     statusMessage.text("AI played, your turn now !");
+
+    checkIfLastMove(playerMarkMapping["You"])
   }
 }
-
 
 /* Identify which cell is clicked as per the index (starts with 0, upper left)
 and request user to start the game before clicking on tiles.
@@ -129,6 +140,7 @@ function identifyWhichCellClicked(){
         } else if (board.isTie()){ // Check if current update ties the game
           statusMessage.text("Nobody won its a tie !");
         } else {
+
           runAI(); // Run the AI
         }
       }
