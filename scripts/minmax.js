@@ -52,7 +52,7 @@ function makeMove(board, index, depth) {
     };
   } else if (newBoard.isTie()) {
     return {
-      score: 0,
+      score: newBoard.getGameScore()['gameScore'],
       move: index
     };
   } else {

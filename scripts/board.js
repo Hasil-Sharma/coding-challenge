@@ -129,6 +129,8 @@ function BoardState (startPlayerMark, switchPlayerMarkMethod, scoringGameMethod)
   this.getGameScore = function() {
     if (gameWon) {
       return {gameWon: true, gameScore: scoringMethod(prevMark)};
+    } else if (this.isTie()) {
+      return {gameWon: false, gameScore : 0};
     }
 
     return {gameWon: false, gameScore: NaN};
